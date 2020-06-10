@@ -1,6 +1,7 @@
 let target;
 let projectiles = [];
 
+let level = 50;
 
 
 function setup() {
@@ -8,13 +9,7 @@ function setup() {
     background(0, 0, 255);
     createCanvas(windowWidth, windowHeight);
     target = new Target(random(0, width), random(0, height), 300, true, random(255, 0));
-
-    for (let i = 0; i < 1; i += 1) {
-        projectiles[i] = new Projectile(width / 2, height / 2, 20, 20, 0, random(0, 255))
-    }
-
-
-
+    generateProjectiles();
 }
 
 function draw() {
@@ -26,9 +21,14 @@ function draw() {
 
     //target change de place
     let targetDistance = dist(mouseX, mouseY, target.x, target.y);
+
     if (targetDistance < target.size / 2) {
         target = new Target(random(0, width), random(0, height), random(20, 150), true, random(255, 0));
+        level++;
+        generateProjectiles();
+
     }
+
     target.display();
 
     //curseur
@@ -39,11 +39,45 @@ function draw() {
     for (let i = 0; i < projectiles.length; i += 1) {
         projectiles[i].afficher();
         projectiles[i].bouger();
+
+
     }
 
-    console.log();
+}
 
+function generateProjectiles() {
+    for (let i = 0; i < level; i += 1) {
+        // 0 = Haut;
+        // 1 = Gauche
+        // 2 = Bas
+        // 3 = Droite
+        let r = int(random(0, 4));
 
+        let startX;
+        let startY;
+        let startSpeedX = random(5, 20);
+        let startSpeedY = random(5, 20);
+        let projectileRadius = random(10, 30);
+
+        if (r == 0) {
+            startX = random(0, width);
+            startY = -projectileRadius;
+
+        } else if (r == 1) {
+            startX = -projectileRadius;
+            startY = random(0, height);
+
+        } else if (r == 2) {
+            startX = random(0, width);
+            startY = height + projectileRadius;
+            startSpeedY = -startSpeedY;
+        } else if (r == 3) {
+            startX = width + projectileRadius;
+            startY = random(0, height);
+            startSpeedX = -startSpeedX;
+        }
+        projectiles[i] = new Projectile(startX, startY, projectileRadius, startSpeedX, startSpeedY, random(0, 255))
+    }
 }
 
 class Target {
@@ -62,19 +96,19 @@ class Target {
 }
 
 class Projectile {
-    constructor(x, y, radius, vitesseX, vitesseY, colorProjectile) {
-        this.x = x;
-        this.y = y;
-        this.radius = radius;
-        this.colorProjectile = colorProjectile;
+    constructor(_x, _y, _radius, _vitesseX, _vitesseY, _colorProjectile) {
+        this.x = _x;
+        this.y = _y;
+        this.radius = _radius;
+        this.vitesseX = _vitesseX;
+        this.vitesseY = _vitesseY;
+        this.colorProjectile = _colorProjectile;
 
     }
 
     afficher() {
         fill(this.colorProjectile, 200, 255);
-        for (this.x = 0; this.x < width; this.x = this.x + 50) {
-            ellipse(this.x, this.y, this.radius, this.radius);
-        }
+        ellipse(this.x, this.y, this.radius, this.radius);
     }
 
     bouger() {
@@ -82,6 +116,7 @@ class Projectile {
         this.y += this.vitesseY;
 
     }
+
 }
 
 // let projectiles = [];
