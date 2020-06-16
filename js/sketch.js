@@ -1,6 +1,5 @@
 let target;
 let projectiles = [];
-
 let level = 20;
 
 
@@ -24,7 +23,9 @@ function draw() {
 
     if (targetDistance < target.size / 2) {
         target = new Target(random(0, width), random(0, height), random(20, 150), true, random(255, 0));
+
         level = level + 10;
+
         generateProjectiles();
 
     }
@@ -77,7 +78,22 @@ function generateProjectiles() {
             startSpeedX = -startSpeedX;
         }
         projectiles[i] = new Projectile(startX, startY, projectileRadius, startSpeedX, startSpeedY, random(0, 255))
+
+        for (let j = 0; j < projectiles.length; j++) {
+            if (i != j && projectiles[i].intersection(projectiles[j])) {
+                projectiles[i].rebond();
+                projectiles[j].rebond();
+            }
+        }
+
+        // let di = dist(projectiles[].x, projectiles[].y, projectiles[].x, projectiles[].y, );
+        //
+        // if (di > Projectile.radius / 2) {
+        //     projectiles.afficher
+        // }
     }
+
+
 }
 
 class Target {
@@ -103,7 +119,20 @@ class Projectile {
         this.vitesseX = _vitesseX;
         this.vitesseY = _vitesseY;
         this.colorProjectile = _colorProjectile;
+    }
 
+    rebond() {
+        fill(255, 255, 0);
+    }
+
+    intersection(other) {
+        let d = dist(this.x, this.y, other.x, other.y);
+
+        if (d < this.radius + other.radius) {
+            return true;
+        } else if (d > this.radius + other.radius) {
+            return false;
+        }
     }
 
     afficher() {
