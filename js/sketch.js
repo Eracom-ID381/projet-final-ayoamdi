@@ -1,7 +1,7 @@
 let target;
 let projectiles = [];
 
-let level = 50;
+let level = 20;
 
 
 function setup() {
@@ -24,7 +24,7 @@ function draw() {
 
     if (targetDistance < target.size / 2) {
         target = new Target(random(0, width), random(0, height), random(20, 150), true, random(255, 0));
-        level++;
+        level = level + 10;
         generateProjectiles();
 
     }
@@ -55,8 +55,8 @@ function generateProjectiles() {
 
         let startX;
         let startY;
-        let startSpeedX = random(5, 20);
-        let startSpeedY = random(5, 20);
+        let startSpeedX = random(3, 8);
+        let startSpeedY = random(3, 8);
         let projectileRadius = random(10, 30);
 
         if (r == 0) {
