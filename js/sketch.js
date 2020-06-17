@@ -46,7 +46,7 @@ function draw() {
                 projectiles[j].rebond();
             }
         }
-        //control.log(projectiles[i]())
+        console.log(projectiles[i].rebond());
     }
 
 
