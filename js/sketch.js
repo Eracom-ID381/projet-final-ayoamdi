@@ -27,7 +27,6 @@ function draw() {
         level = level + 10;
 
         generateProjectiles();
-
     }
 
     target.display();
@@ -40,14 +39,23 @@ function draw() {
     for (let i = 0; i < projectiles.length; i += 1) {
         projectiles[i].afficher();
         projectiles[i].bouger();
-
-
+        for (let j = 0; j < projectiles.length; j += 1) {
+            //check l'intersection entre les projectiles
+            if (i != j && projectiles[i].intersection(projectiles[j])) {
+                projectiles[i].rebond();
+                projectiles[j].rebond();
+            }
+        }
+        //control.log(projectiles[i]())
     }
+
 
 }
 
+
 function generateProjectiles() {
     for (let i = 0; i < level; i += 1) {
+
         // 0 = Haut;
         // 1 = Gauche
         // 2 = Bas
@@ -77,14 +85,9 @@ function generateProjectiles() {
             startY = random(0, height);
             startSpeedX = -startSpeedX;
         }
-        projectiles[i] = new Projectile(startX, startY, projectileRadius, startSpeedX, startSpeedY, random(0, 255))
+        projectiles[i] = new Projectile(startX, startY, projectileRadius, startSpeedX, startSpeedY, random(0, 255));
 
-        for (let j = 0; j < projectiles.length; j++) {
-            if (i != j && projectiles[i].intersection(projectiles[j])) {
-                projectiles[i].rebond();
-                projectiles[j].rebond();
-            }
-        }
+
 
         // let di = dist(projectiles[].x, projectiles[].y, projectiles[].x, projectiles[].y, );
         //
