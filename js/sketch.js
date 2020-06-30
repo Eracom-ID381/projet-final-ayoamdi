@@ -18,14 +18,9 @@ function setup() {
 
 function draw() {
   background(255, 0, 255);
-  // for (let bgColor = 0; bgColor < 255; bgColor = bgColor + random(0, 255)) {
-  //     fill(0, 0, bgColor);
-  //     rect(0, 0, width, height);
-  // }
 
   //target change de place
   let targetDistance = dist(mouseX, mouseY, target.x, target.y);
-
   if (targetDistance < target.size / 2) {
     target = new Target(
       random(0, width),
@@ -34,9 +29,7 @@ function draw() {
       true,
       random(255, 0)
     );
-
     level = level + 10;
-
     generateProjectiles();
   }
 
@@ -47,17 +40,10 @@ function draw() {
   ellipse(mouseX, mouseY, 5, 5);
 
   //projectiles
-
-  for (let i = 0; i < projectiles.length; i += 1) {
-    projectiles[i].afficher();
+  for (let i = 0; i < projectiles.length; i++) {
+    projectiles[i].rebond();
     projectiles[i].bouger();
-    for (let j = 0; j < projectiles.length; j += 1) {
-      //check l'intersection entre les projectiles
-      if (i != j && projectiles[i].intersection(projectiles[j])) {
-        projectiles[i].rebond();
-        projectiles[j].rebond();
-      }
-    }
+    projectiles[i].afficher();
   }
 }
 
@@ -96,7 +82,9 @@ function generateProjectiles() {
       projectileRadius,
       startSpeedX,
       startSpeedY,
-      random(0, 255)
+      random(0, 255),
+      i,
+      projectiles
     );
 
     // let di = dist(projectiles[].x, projectiles[].y, projectiles[].x, projectiles[].y, );
@@ -123,33 +111,42 @@ class Target {
 }
 
 class Projectile {
-  constructor(_x, _y, _radius, _vitesseX, _vitesseY, _colorProjectile) {
+  constructor(_x, _y, _radius, _vitesseX, _vitesseY, _color, _id, _others) {
     this.x = _x;
     this.y = _y;
     this.radius = _radius;
     this.vitesseX = _vitesseX;
     this.vitesseY = _vitesseY;
-    this.colorProjectile = _colorProjectile;
+    this.color = _color;
+    this.id = _id;
+    this.others = _others;
   }
 
   rebond() {
-    //this.colorProjectile = 0;
-    this.vitesseX = -this.vitesseX;
-    this.vitesseY = -this.vitesseY;
-  }
-
-  intersection(other) {
-    let d = dist(this.x, this.y, other.x, other.y);
-
-    if (d < this.radius + other.radius) {
-      return true;
-    } else if (d > this.radius + other.radius) {
-      return false;
+    for (let i = this.id + 1; i < projectiles.length; i++) {
+      // console.log(this.others[i]);
+      let dx = this.others[i].x - this.x;
+      let dy = this.others[i].y - this.y;
+      let distance = sqrt(dx * dx + dy * dy);
+      let minDist = this.others[i].radius + this.radius;
+      //console.log(minDist);
+      if (distance < minDist) {
+        //console.log("2");
+        let angle = atan2(dy, dx);
+        let targetX = this.x + cos(angle) * minDist;
+        let targetY = this.y + sin(angle) * minDist;
+        let ax = (targetX - this.others[i].x) * 0.05;
+        let ay = (targetY - this.others[i].y) * 0.05;
+        this.vitesseX -= ax;
+        this.vitesseY -= ay;
+        this.others[i].vitesseX += ax;
+        this.others[i].vitesseY += ay;
+      }
     }
   }
 
   afficher() {
-    fill(this.colorProjectile, 200, 255);
+    fill(this.color, 200, 255);
     ellipse(this.x, this.y, this.radius, this.radius);
   }
 
@@ -158,68 +155,3 @@ class Projectile {
     this.y += this.vitesseY;
   }
 }
-
-// let projectiles = [];
-// let projectileHaut;
-// let projectileBas;
-// let projectileGauche;
-// let projectileDroite;
-// let level = 0;
-
-// function setup() {
-//     createCanvas(windowWidth, windowHeight);
-//     //background(0, 0, 0);
-//     //projectileHaut = new Projectile();
-//     // projectileBas = new Projectile();
-//     // projectileGauche = new Projectile();
-//     // projectileDroite = new Projectile();
-//     projectiles.push(projectileHaut);
-//     projectiles.push(projectileBas);
-//     projectiles.push(projectileGauche);
-//     projectiles.push(projectileDroite);
-
-// }
-
-// function draw() {
-
-//     //curseur
-//     fill(255, 204, 0, 30);
-//     ellipse(mouseX, mouseY, 10, 10);
-//     //point rouge
-//     noStroke();
-//     fill(255, 17, 5, 20);
-//     ellipse(width / 2 + 650, height / 2 + 350, 50, 50);
-//     //point vert
-//     fill(155, 255, 5, 20);
-//     ellipse(width / 2 - 650, height / 2 - 350, 50, 50);
-
-// }
-
-// class Projectile {
-//     constructor(x, y, radius, r, v, b, vitesseX, vitesseY) {
-//         this.x = x;
-//         this.y = y;
-//         this.radius = radius;
-//         this.r = r;
-//         this.v = v;
-//         this.b = b;
-//     }
-
-//     afficher() {
-//         fill(r, v, b);
-//         for (this.x = 0; this.x < width; this.x = x + 50) {
-//             ellipse(this.x, this.y, this.radius, this.radius);
-//         }
-//     }
-
-//     bouger() {
-//         this.x += this.vitesseX;
-//         this.y += this.vitesseY;
-
-//     }
-
-// }
-
-// function windowResized() {
-//     resizeCanvas(windowWidth, windowHeight);
-// }
