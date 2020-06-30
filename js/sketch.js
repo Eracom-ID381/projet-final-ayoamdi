@@ -1,6 +1,7 @@
 let target;
 let projectiles = [];
 let level = 2;
+let score = 0;
 
 function setup() {
   colorMode(HSB, 255);
@@ -17,10 +18,20 @@ function setup() {
 }
 
 function draw() {
-  background(255, 0, 255);
+  background(255, 255, 255);
+  noStroke();
+  fill(255, 255, 0);
+  textSize(50);
+  text(score, width / 2, 100);
+
+  // for (let bgColor = 0; bgColor < 255; bgColor = bgColor + random(0, 255)) {
+  //     fill(0, 0, bgColor);
+  //     rect(0, 0, width, height);
+  // }
 
   //target change de place
   let targetDistance = dist(mouseX, mouseY, target.x, target.y);
+
   if (targetDistance < target.size / 2) {
     target = new Target(
       random(0, width),
@@ -29,14 +40,18 @@ function draw() {
       true,
       random(255, 0)
     );
+
     level = level + 10;
+
     generateProjectiles();
+
+    score = +1;
   }
 
   target.display();
 
   //curseur
-  fill(255, 190, 255, 30);
+  fill(0, 0, 255);
   ellipse(mouseX, mouseY, 5, 5);
 
   //projectiles
@@ -76,6 +91,7 @@ function generateProjectiles() {
       startY = random(0, height);
       startSpeedX = -startSpeedX;
     }
+
     projectiles[i] = new Projectile(
       startX,
       startY,
