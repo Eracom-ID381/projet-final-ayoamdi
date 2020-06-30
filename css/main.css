@@ -1,3 +1,7 @@
 * {
-    cursor: none;
+  cursor: none;
+}
+
+button.hidden {
+  display: none;
 }

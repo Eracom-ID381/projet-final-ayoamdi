@@ -1,7 +1,13 @@
 let target;
 let projectiles = [];
-let level = 2;
+let level = 1;
 let score = 0;
+let gameOver = false;
+let _gameOver;
+let button;
+// 0: Game on
+// 1: Game over. On entre dans ce mode quand un projectile entre en collision avec le curseur.
+//    Un écran apparait, nous permettant de revenir au mode 0.
 
 function setup() {
   colorMode(HSB, 255);
@@ -15,51 +21,73 @@ function setup() {
     random(255, 0)
   );
   generateProjectiles();
+
+  button = createButton("Restart");
+  button.position(width / 2, height / 2);
+  button.mousePressed(restartGame);
+  button.addClass("hidden");
+
+  _gameOver = gameOver;
 }
 
 function draw() {
-  background(255, 255, 255);
+  background(0, 0, 0);
   noStroke();
-  fill(255, 255, 0);
-  textSize(50);
-  text(score, width / 2, 100);
-
-  // for (let bgColor = 0; bgColor < 255; bgColor = bgColor + random(0, 255)) {
-  //     fill(0, 0, bgColor);
-  //     rect(0, 0, width, height);
-  // }
-
-  //target change de place
-  let targetDistance = dist(mouseX, mouseY, target.x, target.y);
-
-  if (targetDistance < target.size / 2) {
-    target = new Target(
-      random(0, width),
-      random(0, height),
-      random(20, 150),
-      true,
-      random(255, 0)
-    );
-
-    level = level + 10;
-
-    generateProjectiles();
-
-    score = +1;
-  }
-
-  target.display();
-
   //curseur
   fill(0, 0, 255);
   ellipse(mouseX, mouseY, 5, 5);
 
-  //projectiles
-  for (let i = 0; i < projectiles.length; i++) {
-    projectiles[i].rebond();
-    projectiles[i].bouger();
-    projectiles[i].afficher();
+  fill(255, 255, 0);
+  textSize(50);
+  text(score, width / 2, 100);
+
+  if (!gameOver) {
+    let targetDistance = dist(mouseX, mouseY, target.x, target.y);
+
+    if (targetDistance < target.size / 2) {
+      target = new Target(
+        random(0, width),
+        random(0, height),
+        random(20, 150),
+        true,
+        random(255, 0)
+      );
+      level = level + 1;
+      generateProjectiles();
+      score = +1;
+    }
+
+    target.display();
+
+    //projectiles
+    for (let i = 0; i < projectiles.length; i++) {
+      projectiles[i].rebond();
+      projectiles[i].bouger();
+      projectiles[i].afficher();
+      let distance = dist(projectiles[i].x, projectiles[i].y, mouseX, mouseY);
+      // console.log(distance);
+      if (distance < 10) {
+        gameOver = true;
+        if (_gameOver != gameOver) {
+          gameOverScreen();
+          _gameOver = gameOver;
+        }
+      }
+    }
   }
+}
+
+function gameOverScreen() {
+  button.removeClass("hidden");
+}
+
+function restartGame() {
+  button.addClass("hidden");
+  gameOver = false;
+  _gameOver = gameOver;
+  projectiles = [];
+  level = 1;
+  generateProjectiles();
 }
 
 function generateProjectiles() {
@@ -102,12 +130,6 @@ function generateProjectiles() {
       i,
       projectiles
     );
-
-    // let di = dist(projectiles[].x, projectiles[].y, projectiles[].x, projectiles[].y, );
-    //
-    // if (di > Projectile.radius / 2) {
-    //     projectiles.afficher
-    // }
   }
 }
 
