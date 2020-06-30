@@ -25,7 +25,7 @@ function setup() {
     generateProjectiles();
 
     button = createButton("RESTART");
-    button.position(width / 2 - 220, height / 2 + 310);
+    button.position(width / 2 - 240, height / 2 + 310);
     button.mousePressed(restartGame);
     button.addClass("hidden");
 
@@ -39,11 +39,10 @@ function draw() {
     fill(0, 0, 255);
     ellipse(mouseX, mouseY, 5, 5);
 
-    fill(255, 0, 255, 50);
-    textAlign(CENTER, CENTER);
+
+
+
     scoreText();
-
-
     if (!gameOver) {
         let targetDistance = dist(mouseX, mouseY, target.x, target.y);
 
@@ -58,6 +57,7 @@ function draw() {
             level = level + 1;
             generateProjectiles();
             score = score + 1;
+
         }
 
         target.display();
@@ -73,9 +73,7 @@ function draw() {
                 gameOver = true;
                 if (_gameOver != gameOver) {
                     gameOverScreen();
-
                     _gameOver = gameOver;
-
                 }
             }
         }
@@ -84,12 +82,20 @@ function draw() {
 
 function gameOverScreen() {
     button.removeClass("hidden");
-    fill(255, 0, 255);
-    text(loser, width / 2, 100);
+    var lost = document.getElementById("loser");
+    lost.classList.remove("hidden");
+    text('zebi', width / 2, height / 2);
+}
 
+function ilost() {
+    fill(255, 0, 255);
+    textSize(20);
+    text(loser, mouseX, mouseY);
 }
 
 function scoreText() {
+    fill(random(0, 255), 200, 255, 70);
+    textAlign(CENTER, CENTER);
     textFont('Helvetica')
     textSize(centerText);
     text(score, width / 2, height / 2);
@@ -97,6 +103,8 @@ function scoreText() {
 
 function restartGame() {
     button.addClass("hidden");
+    var lost = document.getElementById("loser");
+    lost.classList.add("hidden");
     gameOver = false;
     _gameOver = gameOver;
     projectiles = [];
