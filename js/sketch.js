@@ -2,6 +2,8 @@ let target;
 let projectiles = [];
 let level = 1;
 let score = 0;
+let loser = 'YOU LOSE'
+let centerText = 900;
 let gameOver = false;
 let _gameOver;
 let button;
@@ -10,186 +12,199 @@ let button;
 //    Un écran apparait, nous permettant de revenir au mode 0.
 
 function setup() {
-  colorMode(HSB, 255);
-  background(0, 0, 255);
-  createCanvas(windowWidth, windowHeight);
-  target = new Target(
-    random(0, width),
-    random(0, height),
-    300,
-    true,
-    random(255, 0)
-  );
-  generateProjectiles();
+    colorMode(HSB, 255);
+    background(0, 0, 255);
+    createCanvas(windowWidth, windowHeight);
+    target = new Target(
+        random(0, width),
+        random(0, height),
+        300,
+        true,
+        random(255, 0)
+    );
+    generateProjectiles();
 
-  button = createButton("Restart");
-  button.position(width / 2, height / 2);
-  button.mousePressed(restartGame);
-  button.addClass("hidden");
+    button = createButton("RESTART");
+    button.position(width / 2 - 220, height / 2 + 310);
+    button.mousePressed(restartGame);
+    button.addClass("hidden");
 
-  _gameOver = gameOver;
+    _gameOver = gameOver;
 }
 
 function draw() {
-  background(0, 0, 0);
-  noStroke();
-  //curseur
-  fill(0, 0, 255);
-  ellipse(mouseX, mouseY, 5, 5);
+    background(0, 0, 0);
+    noStroke();
+    //curseur
+    fill(0, 0, 255);
+    ellipse(mouseX, mouseY, 5, 5);
 
-  fill(255, 255, 0);
-  textSize(50);
-  text(score, width / 2, 100);
+    fill(255, 0, 255, 50);
+    textAlign(CENTER, CENTER);
+    scoreText();
 
-  if (!gameOver) {
-    let targetDistance = dist(mouseX, mouseY, target.x, target.y);
 
-    if (targetDistance < target.size / 2) {
-      target = new Target(
-        random(0, width),
-        random(0, height),
-        random(20, 150),
-        true,
-        random(255, 0)
-      );
-      level = level + 1;
-      generateProjectiles();
-      score = +1;
-    }
+    if (!gameOver) {
+        let targetDistance = dist(mouseX, mouseY, target.x, target.y);
 
-    target.display();
-
-    //projectiles
-    for (let i = 0; i < projectiles.length; i++) {
-      projectiles[i].rebond();
-      projectiles[i].bouger();
-      projectiles[i].afficher();
-      let distance = dist(projectiles[i].x, projectiles[i].y, mouseX, mouseY);
-      // console.log(distance);
-      if (distance < 10) {
-        gameOver = true;
-        if (_gameOver != gameOver) {
-          gameOverScreen();
-          _gameOver = gameOver;
+        if (targetDistance < target.size / 2) {
+            target = new Target(
+                random(0, width),
+                random(0, height),
+                random(20, 150),
+                true,
+                random(255, 0)
+            );
+            level = level + 1;
+            generateProjectiles();
+            score = score + 1;
         }
-      }
+
+        target.display();
+
+        //projectiles
+        for (let i = 0; i < projectiles.length; i++) {
+            projectiles[i].rebond();
+            projectiles[i].bouger();
+            projectiles[i].afficher();
+            let distance = dist(projectiles[i].x, projectiles[i].y, mouseX, mouseY);
+            // console.log(distance);
+            if (distance < 10) {
+                gameOver = true;
+                if (_gameOver != gameOver) {
+                    gameOverScreen();
+
+                    _gameOver = gameOver;
+
+                }
+            }
+        }
     }
-  }
 }
 
 function gameOverScreen() {
-  button.removeClass("hidden");
+    button.removeClass("hidden");
+    fill(255, 0, 255);
+    text(loser, width / 2, 100);
+
+}
+
+function scoreText() {
+    textFont('Helvetica')
+    textSize(centerText);
+    text(score, width / 2, height / 2);
 }
 
 function restartGame() {
-  button.addClass("hidden");
-  gameOver = false;
-  _gameOver = gameOver;
-  projectiles = [];
-  level = 1;
-  generateProjectiles();
+    button.addClass("hidden");
+    gameOver = false;
+    _gameOver = gameOver;
+    projectiles = [];
+    level = 1;
+    generateProjectiles();
+    score = 0;
 }
 
 function generateProjectiles() {
-  for (let i = 0; i < level; i += 1) {
-    // 0 = Haut;
-    // 1 = Gauche
-    // 2 = Bas
-    // 3 = Droite
-    let r = int(random(0, 4));
+    for (let i = 0; i < level; i += 1) {
+        // 0 = Haut;
+        // 1 = Gauche
+        // 2 = Bas
+        // 3 = Droite
+        let r = int(random(0, 4));
 
-    let startX;
-    let startY;
-    let startSpeedX = random(3, 8);
-    let startSpeedY = random(3, 8);
-    let projectileRadius = random(10, 30);
+        let startX;
+        let startY;
+        let startSpeedX = random(3, 8);
+        let startSpeedY = random(3, 8);
+        let projectileRadius = random(10, 30);
 
-    if (r == 0) {
-      startX = random(0, width);
-      startY = -projectileRadius;
-    } else if (r == 1) {
-      startX = -projectileRadius;
-      startY = random(0, height);
-    } else if (r == 2) {
-      startX = random(0, width);
-      startY = height + projectileRadius;
-      startSpeedY = -startSpeedY;
-    } else if (r == 3) {
-      startX = width + projectileRadius;
-      startY = random(0, height);
-      startSpeedX = -startSpeedX;
+        if (r == 0) {
+            startX = random(0, width);
+            startY = -projectileRadius;
+        } else if (r == 1) {
+            startX = -projectileRadius;
+            startY = random(0, height);
+        } else if (r == 2) {
+            startX = random(0, width);
+            startY = height + projectileRadius;
+            startSpeedY = -startSpeedY;
+        } else if (r == 3) {
+            startX = width + projectileRadius;
+            startY = random(0, height);
+            startSpeedX = -startSpeedX;
+        }
+
+        projectiles[i] = new Projectile(
+            startX,
+            startY,
+            projectileRadius,
+            startSpeedX,
+            startSpeedY,
+            random(0, 255),
+            i,
+            projectiles
+        );
     }
-
-    projectiles[i] = new Projectile(
-      startX,
-      startY,
-      projectileRadius,
-      startSpeedX,
-      startSpeedY,
-      random(0, 255),
-      i,
-      projectiles
-    );
-  }
 }
 
 class Target {
-  constructor(_x, _y, _size, _isActive, _colorTarget) {
-    this.x = _x;
-    this.y = _y;
-    this.size = _size;
-    this.isActive = _isActive;
-    this.colorTarget = _colorTarget;
-  }
+    constructor(_x, _y, _size, _isActive, _colorTarget) {
+        this.x = _x;
+        this.y = _y;
+        this.size = _size;
+        this.isActive = _isActive;
+        this.colorTarget = _colorTarget;
+    }
 
-  display() {
-    fill(this.colorTarget, 200, 255);
-    ellipse(this.x, this.y, this.size);
-  }
+    display() {
+        fill(this.colorTarget, 200, 255);
+        ellipse(this.x, this.y, this.size);
+    }
 }
 
 class Projectile {
-  constructor(_x, _y, _radius, _vitesseX, _vitesseY, _color, _id, _others) {
-    this.x = _x;
-    this.y = _y;
-    this.radius = _radius;
-    this.vitesseX = _vitesseX;
-    this.vitesseY = _vitesseY;
-    this.color = _color;
-    this.id = _id;
-    this.others = _others;
-  }
-
-  rebond() {
-    for (let i = this.id + 1; i < projectiles.length; i++) {
-      // console.log(this.others[i]);
-      let dx = this.others[i].x - this.x;
-      let dy = this.others[i].y - this.y;
-      let distance = sqrt(dx * dx + dy * dy);
-      let minDist = this.others[i].radius + this.radius;
-      //console.log(minDist);
-      if (distance < minDist) {
-        //console.log("2");
-        let angle = atan2(dy, dx);
-        let targetX = this.x + cos(angle) * minDist;
-        let targetY = this.y + sin(angle) * minDist;
-        let ax = (targetX - this.others[i].x) * 0.05;
-        let ay = (targetY - this.others[i].y) * 0.05;
-        this.vitesseX -= ax;
-        this.vitesseY -= ay;
-        this.others[i].vitesseX += ax;
-        this.others[i].vitesseY += ay;
-      }
+    constructor(_x, _y, _radius, _vitesseX, _vitesseY, _color, _id, _others) {
+        this.x = _x;
+        this.y = _y;
+        this.radius = _radius;
+        this.vitesseX = _vitesseX;
+        this.vitesseY = _vitesseY;
+        this.color = _color;
+        this.id = _id;
+        this.others = _others;
     }
-  }
 
-  afficher() {
-    fill(this.color, 200, 255);
-    ellipse(this.x, this.y, this.radius, this.radius);
-  }
+    rebond() {
+        for (let i = this.id + 1; i < projectiles.length; i++) {
+            // console.log(this.others[i]);
+            let dx = this.others[i].x - this.x;
+            let dy = this.others[i].y - this.y;
+            let distance = sqrt(dx * dx + dy * dy);
+            let minDist = this.others[i].radius + this.radius;
+            //console.log(minDist);
+            if (distance < minDist) {
+                //console.log("2");
+                let angle = atan2(dy, dx);
+                let targetX = this.x + cos(angle) * minDist;
+                let targetY = this.y + sin(angle) * minDist;
+                let ax = (targetX - this.others[i].x) * 0.05;
+                let ay = (targetY - this.others[i].y) * 0.05;
+                this.vitesseX -= ax;
+                this.vitesseY -= ay;
+                this.others[i].vitesseX += ax;
+                this.others[i].vitesseY += ay;
+            }
+        }
+    }
 
-  bouger() {
-    this.x += this.vitesseX;
-    this.y += this.vitesseY;
-  }
+    afficher() {
+        fill(this.color, 200, 255);
+        ellipse(this.x, this.y, this.radius, this.radius);
+    }
+
+    bouger() {
+        this.x += this.vitesseX;
+        this.y += this.vitesseY;
+    }
 }

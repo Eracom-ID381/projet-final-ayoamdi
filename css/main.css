@@ -1,7 +1,17 @@
 * {
-  cursor: none;
+    cursor: none;
 }
 
 button.hidden {
-  display: none;
+    display: none;
+}
+
+button {
+    font-size: 100px;
+    font-family: "Helvetica", sans-serif;
+    text-align: center;
+    border-radius: 20px;
+    border-color: rgba(255, 255, 255, 0.5);
+    background-color: black;
+    color: white;
 }
