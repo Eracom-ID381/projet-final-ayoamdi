@@ -66,11 +66,19 @@ function draw() {
             let distance = dist(projectiles[i].x, projectiles[i].y, mouseX, mouseY);
             // console.log(distance);
             if (distance < 10) {
+                // ilost();
+                // loserProjectiles()
                 gameOver = true;
+
                 if (_gameOver != gameOver) {
                     gameOverScreen();
                     _gameOver = gameOver;
                 }
+            }
+            if (level < 3) {
+                textAlign(LEFT);
+                textSize(25);
+                text('Touche le cercle qui est immobile', mouseX, mouseY)
             }
         }
     }
@@ -81,14 +89,13 @@ function gameOverScreen() {
     var lost = document.getElementById("loser");
     lost.classList.remove("hidden");
 
-    loserProjectiles();
 }
 
-function ilost() {
-    fill(255, 0, 255);
-    textSize(20);
-    text(loser, mouseX, mouseY);
-}
+// function ilost() {
+//     // fill(255, 0, 255);
+//     textSize(20);
+//     text(loser, mouseX, mouseY);
+// }
 
 function scoreText() {
     fill(random(0, 255), 200, 255, 70);
@@ -153,49 +160,49 @@ function generateProjectiles() {
     }
 }
 
-function loserProjectiles() {
-
-    for (let i = 0; i < level; i += 1) {
-        // 0 = Haut;
-        // 1 = Gauche
-        // 2 = Bas
-        // 3 = Droite
-        let r = int(random(0, 4));
-
-        let startX;
-        let startY;
-        let startSpeedX = random(3, 8);
-        let startSpeedY = random(3, 8);
-        let projectileRadius = random(10, 30);
-
-        if (r == 0) {
-            startX = random(0, width);
-            startY = -projectileRadius;
-        } else if (r == 1) {
-            startX = -projectileRadius;
-            startY = random(0, height);
-        } else if (r == 2) {
-            startX = random(0, width);
-            startY = height + projectileRadius;
-            startSpeedY = -startSpeedY;
-        } else if (r == 3) {
-            startX = width + projectileRadius;
-            startY = random(0, height);
-            startSpeedX = -startSpeedX;
-        }
-
-        projectiles[i] = new Projectile(
-            startX,
-            startY,
-            projectileRadius,
-            startSpeedX,
-            startSpeedY,
-            random(0, 255),
-            i,
-            projectiles
-        );
-    }
-}
+// function loserProjectiles() {
+//     level = 50;
+//     for (let i = 0; i < level; i += 1) {
+//         // 0 = Haut;
+//         // 1 = Gauche
+//         // 2 = Bas
+//         // 3 = Droite
+//         let r = int(random(0, 4));
+//
+//         let startX;
+//         let startY;
+//         let startSpeedX = random(3, 8);
+//         let startSpeedY = random(3, 8);
+//         let projectileRadius = random(10, 30);
+//
+//         if (r == 0) {
+//             startX = random(0, width);
+//             startY = -projectileRadius;
+//         } else if (r == 1) {
+//             startX = -projectileRadius;
+//             startY = random(0, height);
+//         } else if (r == 2) {
+//             startX = random(0, width);
+//             startY = height + projectileRadius;
+//             startSpeedY = -startSpeedY;
+//         } else if (r == 3) {
+//             startX = width + projectileRadius;
+//             startY = random(0, height);
+//             startSpeedX = -startSpeedX;
+//         }
+//
+//         projectiles[i] = new Projectile(
+//             startX,
+//             startY,
+//             projectileRadius,
+//             startSpeedX,
+//             startSpeedY,
+//             random(0, 255),
+//             i,
+//             projectiles
+//         );
+//     }
+// }
 
 class Target {
     constructor(_x, _y, _size, _isActive, _colorTarget) {
