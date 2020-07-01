@@ -84,7 +84,8 @@ function gameOverScreen() {
     button.removeClass("hidden");
     var lost = document.getElementById("loser");
     lost.classList.remove("hidden");
-    text('zebi', width / 2, height / 2);
+
+    loserProjectiles();
 }
 
 function ilost() {
@@ -114,6 +115,50 @@ function restartGame() {
 }
 
 function generateProjectiles() {
+    for (let i = 0; i < level; i += 1) {
+        // 0 = Haut;
+        // 1 = Gauche
+        // 2 = Bas
+        // 3 = Droite
+        let r = int(random(0, 4));
+
+        let startX;
+        let startY;
+        let startSpeedX = random(3, 8);
+        let startSpeedY = random(3, 8);
+        let projectileRadius = random(10, 30);
+
+        if (r == 0) {
+            startX = random(0, width);
+            startY = -projectileRadius;
+        } else if (r == 1) {
+            startX = -projectileRadius;
+            startY = random(0, height);
+        } else if (r == 2) {
+            startX = random(0, width);
+            startY = height + projectileRadius;
+            startSpeedY = -startSpeedY;
+        } else if (r == 3) {
+            startX = width + projectileRadius;
+            startY = random(0, height);
+            startSpeedX = -startSpeedX;
+        }
+
+        projectiles[i] = new Projectile(
+            startX,
+            startY,
+            projectileRadius,
+            startSpeedX,
+            startSpeedY,
+            random(0, 255),
+            i,
+            projectiles
+        );
+    }
+}
+
+function loserProjectiles() {
+
     for (let i = 0; i < level; i += 1) {
         // 0 = Haut;
         // 1 = Gauche
