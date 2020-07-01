@@ -2,7 +2,7 @@ let target;
 let projectiles = [];
 let level = 1;
 let score = 0;
-let loser = 'YOU LOSE'
+let loser = "YOU LOSE";
 let centerText = 900;
 let gameOver = false;
 let _gameOver;
@@ -39,9 +39,6 @@ function draw() {
     fill(0, 0, 255);
     ellipse(mouseX, mouseY, 5, 5);
 
-
-
-
     scoreText();
     if (!gameOver) {
         let targetDistance = dist(mouseX, mouseY, target.x, target.y);
@@ -57,7 +54,6 @@ function draw() {
             level = level + 1;
             generateProjectiles();
             score = score + 1;
-
         }
 
         target.display();
@@ -97,7 +93,7 @@ function ilost() {
 function scoreText() {
     fill(random(0, 255), 200, 255, 70);
     textAlign(CENTER, CENTER);
-    textFont('Helvetica')
+    textFont("Helvetica");
     textSize(centerText);
     text(score, width / 2, height / 2);
 }
