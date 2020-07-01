@@ -90,6 +90,7 @@ function ilost() {
 }
 
 function scoreText() {
+  fill(random(0, 255), 200, 255, 70);
   textAlign(CENTER, CENTER);
   textFont("Helvetica");
   textSize(centerText);
